@@ -1,162 +1,690 @@
 
-const pokemonData = {
-  ISTJ: {
-    match: "ESFP",
-    matchReason: "활기차고 즉흥적인 ESFP는 계획적인 ISTJ에게 새로운 즐거움을 더해 줘요. 서로 다른 장점을 인정하면 안정감과 활력을 함께 얻을 수 있어요.",
-    pokemon: [
-      { name: "꼬부기", id: 7, emoji: "🐢", reason: "신중하게 상황을 살피고 차근차근 행동하는 모습이 ISTJ와 닮았어요. 맡은 일을 꾸준히 해내며 믿음을 주는 타입이에요." },
-      { name: "거북왕", id: 9, emoji: "🐢", reason: "든든하고 책임감 있는 모습이 돋보여요. 목표를 정하면 쉽게 흔들리지 않고 자신이 맡은 역할을 충실히 해내는 성격과 잘 어울려요." },
-      { name: "모래두지", id: 27, emoji: "🟤", reason: "주변을 꼼꼼히 살피고 자신만의 방식으로 문제를 해결하는 모습이 닮았어요. 서두르기보다 확실한 방법을 선택하는 타입이에요." }
-    ]
-  },
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBTI로 포켓몬 찾기</title>
 
-  ISFJ: {
-    match: "ESTP",
-    matchReason: "행동력이 좋은 ESTP는 ISFJ가 새로운 경험에 도전하도록 도와줄 수 있어요. ISFJ의 세심함은 ESTP에게 든든한 안정감을 줄 수 있어요.",
-    pokemon: [
-      { name: "이브이", id: 133, emoji: "🦊", reason: "주변 환경에 잘 적응하면서도 자신만의 따뜻한 매력을 지니고 있어요. 가까운 사람들을 소중히 여기고 관계를 꾸준히 가꾸는 모습이 닮았어요." },
-      { name: "럭키", id: 113, emoji: "🥚", reason: "다른 사람을 돕고 편안하게 해 주는 모습이 잘 어울려요. 상대방의 작은 변화도 알아차리고 먼저 배려하는 다정한 타입이에요." },
-      { name: "토게틱", id: 176, emoji: "🪽", reason: "주변에 기쁨과 평화를 전하는 이미지예요. 튀기보다는 조용히 곁을 지키며 다른 사람을 챙기는 모습이 닮았어요." }
-    ]
-  },
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  INFJ: {
-    match: "ENFP",
-    matchReason: "ENFP의 자유로운 발상과 INFJ의 깊은 통찰은 서로에게 새로운 관점을 줄 수 있어요. 서로의 이상과 가치관을 진지하게 나누기 좋은 조합이에요.",
-    pokemon: [
-      { name: "뮤", id: 151, emoji: "✨", reason: "신비롭고 상상력이 풍부한 모습이 INFJ와 잘 어울려요. 눈앞의 일만 보기보다 그 안에 담긴 의미와 가능성을 깊이 생각하는 타입이에요." },
-      { name: "에브이", id: 196, emoji: "🔮", reason: "예리한 감각으로 주변을 관찰하는 이미지예요. 다른 사람의 말뿐 아니라 감정과 분위기까지 이해하려는 섬세함이 닮았어요." },
-      { name: "가디안", id: 282, emoji: "💎", reason: "소중한 사람을 진심으로 이해하고 지키려는 모습이 잘 어울려요. 자신이 중요하게 생각하는 가치와 사람을 위해 깊이 고민하는 타입이에요." }
-    ]
-  },
+    body {
+      margin: 0;
+      background: #fff8e8;
+      color: #493b2c;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      text-align: center;
+    }
 
-  INTJ: {
-    match: "ENTP",
-    matchReason: "ENTP는 새로운 가능성을 제시하고 INTJ는 그 가능성을 체계적으로 발전시킬 수 있어요. 논리적인 토론을 통해 서로의 생각을 확장할 수 있어요.",
-    pokemon: [
-      { name: "뮤츠", id: 150, emoji: "🔮", reason: "독립적으로 생각하고 자신의 목표를 향해 나아가는 모습이 닮았어요. 복잡한 문제를 분석하고 장기적인 전략을 세우는 타입과 잘 어울려요." },
-      { name: "후딘", id: 65, emoji: "🥄", reason: "뛰어난 지능과 분석력을 떠올리게 하는 포켓몬이에요. 감에만 의존하기보다 정보를 모아 논리적으로 결론을 내리는 성격과 어울려요." },
-      { name: "메타그로스", id: 376, emoji: "🤖", reason: "여러 정보를 종합해 효율적인 해결책을 찾는 이미지예요. 복잡한 상황에서도 핵심을 파악하고 체계적으로 움직이는 모습이 닮았어요." }
-    ]
-  },
+    .container {
+      width: min(1000px, 92%);
+      margin: auto;
+      padding: 38px 0 55px;
+    }
 
-  ISTP: {
-    match: "ESFJ",
-    matchReason: "ESFJ는 주변 사람들과의 관계에서 따뜻함을 더하고 ISTP는 침착한 문제 해결 능력을 발휘할 수 있어요. 서로의 독립성과 배려를 존중하는 것이 중요해요.",
-    pokemon: [
-      { name: "루카리오", id: 448, emoji: "🥋", reason: "주변의 변화를 빠르게 파악하고 필요한 순간에 정확히 행동하는 모습이 닮았어요. 말로 길게 설명하기보다 직접 해 보며 해결책을 찾는 타입이에요." },
-      { name: "핫삼", id: 212, emoji: "✂️", reason: "불필요한 행동을 줄이고 필요한 일에 집중하는 모습이 잘 어울려요. 실용적인 방법을 선호하고 위기 상황에서도 침착하게 대응하는 타입이에요." },
-      { name: "앱솔", id: 359, emoji: "🌙", reason: "독립적이고 관찰력이 뛰어난 이미지예요. 혼자 생각할 시간을 중요하게 여기며 상황을 직접 파악한 뒤 판단하는 모습이 닮았어요." }
-    ]
-  },
+    .top-icon {
+      font-size: 48px;
+    }
 
-  ISFP: {
-    match: "ESTJ",
-    matchReason: "ESTJ의 계획성과 추진력은 ISFP의 아이디어를 실현하는 데 도움이 될 수 있어요. ESTJ도 ISFP를 통해 다양한 관점과 여유를 배울 수 있어요.",
-    pokemon: [
-      { name: "피카츄", id: 25, emoji: "⚡", reason: "자신의 감정에 솔직하고 소중한 사람에게 진심을 보여 주는 모습이 닮았어요. 정해진 틀에 얽매이기보다 자신만의 방식으로 즐거움을 찾는 타입이에요." },
-      { name: "님피아", id: 700, emoji: "🎀", reason: "부드럽고 다정한 분위기가 잘 어울려요. 주변 사람의 감정을 세심하게 살피고 갈등보다는 조화로운 관계를 소중히 여기는 모습이 닮았어요." },
-      { name: "리피아", id: 470, emoji: "🍃", reason: "자연스럽고 차분한 분위기가 ISFP의 감성과 잘 어울려요. 자신이 좋아하는 것과 아름답다고 느끼는 것을 중요하게 생각하는 타입이에요." }
-    ]
-  },
+    h1 {
+      font-size: clamp(30px, 5vw, 46px);
+      color: #664b26;
+      margin: 8px 0;
+      letter-spacing: -1px;
+    }
 
-  INFP: {
-    match: "ENFJ",
-    matchReason: "ENFJ는 INFP의 생각과 감정을 따뜻하게 표현하도록 도와줄 수 있어요. INFP는 ENFJ가 자신의 내면과 가치관을 돌아보도록 도울 수 있어요.",
-    pokemon: [
-      { name: "치코리타", id: 152, emoji: "🍃", reason: "순수하고 다정한 모습이 INFP와 닮았어요. 다른 사람의 입장을 이해하려 노력하고 자신에게 중요한 가치와 신념을 소중히 여기는 타입이에요." },
-      { name: "세레비", id: 251, emoji: "🌱", reason: "희망과 평화를 떠올리게 하는 이미지예요. 현실적인 조건만 보기보다 더 나은 미래를 상상하고 의미 있는 일을 꿈꾸는 성격과 잘 어울려요." },
-      { name: "파비코리", id: 334, emoji: "☁️", reason: "부드럽고 감성적인 분위기가 닮았어요. 상상력이 풍부하고 자신만의 내면세계를 소중히 여기며 감정을 깊이 느끼는 타입이에요." }
-    ]
-  },
+    .subtitle {
+      font-size: 18px;
+      line-height: 1.8;
+      color: #806c53;
+      margin: 15px 0 30px;
+    }
 
-  INTP: {
-    match: "ENTJ",
-    matchReason: "ENTJ는 아이디어를 실행할 방향을 제시하고 INTP는 논리적인 분석으로 계획을 발전시킬 수 있어요. 서로의 의견을 존중하면 좋은 협력 관계를 만들 수 있어요.",
-    pokemon: [
-      { name: "메타몽", id: 132, emoji: "🟣", reason: "한 가지 모습이나 방법에 갇히지 않는 유연함이 닮았어요. 익숙한 문제도 다른 관점에서 바라보고 다양한 가능성을 실험하는 타입이에요." },
-      { name: "폴리곤2", id: 233, emoji: "💻", reason: "기술과 정보에 대한 호기심을 떠올리게 해요. 어떤 원리로 작동하는지 궁금해하고 스스로 이해할 때까지 탐구하는 모습이 잘 어울려요." },
-      { name: "란쿨루스", id: 579, emoji: "🧠", reason: "독특한 사고방식과 지적인 분위기가 닮았어요. 다른 사람이 당연하게 여기는 것도 질문하고 자신만의 논리로 답을 찾아가는 타입이에요." }
-    ]
-  },
+    .panel,
+    .result-card {
+      background: #fff;
+      border: 2px solid #f5df9f;
+      border-radius: 26px;
+      padding: 26px;
+      box-shadow: 0 7px 0 #f3e5c7;
+    }
 
-  ESTP: {
-    match: "ISFJ",
-    matchReason: "ISFJ의 세심함은 ESTP가 놓치기 쉬운 부분을 살펴보는 데 도움이 될 수 있어요. ESTP의 결단력은 ISFJ가 새로운 시도를 할 때 용기를 줄 수 있어요.",
-    pokemon: [
-      { name: "리자몽", id: 6, emoji: "🔥", reason: "대담하고 도전적인 모습이 ESTP와 잘 어울려요. 오래 고민하기보다 직접 부딪치며 경험을 쌓고 예상치 못한 상황에도 빠르게 대응하는 타입이에요." },
-      { name: "망나뇽", id: 149, emoji: "🐉", reason: "강한 존재감과 행동력이 돋보여요. 어려운 일이 생겨도 주저하기보다 해결 방법을 찾고 주변을 이끄는 모습이 닮았어요." },
-      { name: "초염몽", id: 392, emoji: "🔥", reason: "민첩하고 에너지가 넘치는 모습이 어울려요. 몸으로 익히는 활동과 새로운 도전을 즐기고 상황에 맞춰 유연하게 움직이는 타입이에요." }
-    ]
-  },
+    h2 {
+      font-size: 24px;
+      margin: 0 0 12px;
+    }
 
-  ESFP: {
-    match: "ISTJ",
-    matchReason: "ISTJ의 꼼꼼함은 ESFP의 아이디어가 실제 결과로 이어지도록 도와줄 수 있어요. ESFP는 ISTJ에게 일상 속 즐거움과 새로운 경험을 더해 줄 수 있어요.",
-    pokemon: [
-      { name: "파이리", id: 4, emoji: "🔥", reason: "열정적이고 활기찬 모습이 ESFP와 닮았어요. 직접 경험하는 것을 좋아하고 주변 사람들과 즐거운 순간을 나누는 타입이에요." },
-      { name: "아차모", id: 255, emoji: "🐥", reason: "호기심이 많고 새로운 일에 관심을 보이는 모습이 잘 어울려요. 생각만 하기보다 직접 참여하면서 재미와 배움을 얻는 타입이에요." },
-      { name: "플러시", id: 311, emoji: "⚡", reason: "밝고 긍정적인 에너지로 주변을 응원하는 이미지예요. 사람들과 함께 활동하며 분위기를 즐겁게 만드는 모습이 닮았어요." }
-    ]
-  },
+    .help {
+      color: #8b7963;
+      font-size: 16px;
+      margin-bottom: 22px;
+    }
 
-  ENFP: {
-    match: "INFJ",
-    matchReason: "ENFP의 다양한 아이디어와 INFJ의 깊은 통찰이 만나면 새로운 가능성을 발견할 수 있어요. 서로의 꿈과 생각을 진지하게 나누기 좋은 조합이에요.",
-    pokemon: [
-      { name: "라이츄", id: 26, emoji: "⚡", reason: "활발하고 호기심이 많으며 에너지가 넘치는 모습이 닮았어요. 새로운 사람과 경험에 마음을 열고 일상에서 재미있는 가능성을 발견하는 타입이에요." },
-      { name: "토게키스", id: 468, emoji: "🪽", reason: "밝고 희망적인 분위기가 잘 어울려요. 주변 사람들에게 좋은 영향을 주고 모두가 즐거울 수 있는 방법을 찾으려는 모습이 닮았어요." },
-      { name: "쉐이미", id: 492, emoji: "🌼", reason: "작은 일에서도 기쁨과 가능성을 발견하는 이미지예요. 틀에 갇히지 않고 새로운 아이디어를 떠올리며 긍정적인 변화를 꿈꾸는 타입이에요." }
-    ]
-  },
+    .mbti-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 11px;
+    }
 
-  ENTP: {
-    match: "INTJ",
-    matchReason: "ENTP는 새로운 가능성을 제안하고 INTJ는 그중 실현 가능한 방향을 구체화할 수 있어요. 서로 다른 의견을 토론하며 아이디어를 발전시키기 좋은 조합이에요.",
-    pokemon: [
-      { name: "팬텀", id: 94, emoji: "👻", reason: "장난기와 재치가 넘치고 예상 밖의 행동을 하는 모습이 닮았어요. 익숙한 규칙에도 의문을 품고 색다른 해결책을 떠올리는 타입이에요." },
-      { name: "조로아크", id: 571, emoji: "🌑", reason: "영리하고 독창적인 분위기가 잘 어울려요. 남들이 생각하지 못한 전략을 떠올리고 여러 가능성을 비교하며 새로운 길을 찾는 모습이 닮았어요." },
-      { name: "깜까미", id: 302, emoji: "💎", reason: "독특한 개성과 호기심이 돋보여요. 남들과 똑같은 방식보다 자신만의 관점으로 주변을 탐색하고 재미있는 아이디어를 발견하는 타입이에요." }
-    ]
-  },
+    .mbti-button {
+      border: 2px solid #f0dcae;
+      border-radius: 14px;
+      background: #fffaf0;
+      color: #6c5434;
+      padding: 16px 4px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.15s;
+    }
 
-  ESTJ: {
-    match: "ISFP",
-    matchReason: "ESTJ는 계획과 실행을 돕고 ISFP는 유연한 시각과 감성을 더해 줄 수 있어요. 서로의 방식이 다르다는 점을 인정하면 균형 잡힌 관계를 만들 수 있어요.",
-    pokemon: [
-      { name: "윈디", id: 59, emoji: "🐕", reason: "든든하고 책임감 있는 모습이 ESTJ와 닮았어요. 목표를 명확히 하고 맡은 역할을 적극적으로 수행하며 주변에 신뢰를 주는 타입이에요." },
-      { name: "괴력몬", id: 68, emoji: "💪", reason: "강한 힘과 꾸준한 훈련을 떠올리게 해요. 어려운 과제가 있어도 계획을 세우고 노력해 결과를 만들어 내는 모습이 잘 어울려요." },
-      { name: "아머까오", id: 823, emoji: "🛡️", reason: "침착하고 믿음직하게 자신의 역할을 수행하는 이미지예요. 상황을 정리하고 책임 있게 행동하며 질서를 유지하려는 성격과 닮았어요." }
-    ]
-  },
+    .mbti-button:hover {
+      background: #ffe7a1;
+      transform: translateY(-2px);
+    }
 
-  ESFJ: {
-    match: "ISTP",
-    matchReason: "ESFJ의 배려와 ISTP의 침착한 문제 해결 능력은 서로 다른 상황에서 도움이 될 수 있어요. 서로의 소통 방식과 개인 시간을 존중하는 것이 중요해요.",
-    pokemon: [
-      { name: "푸린", id: 39, emoji: "🎤", reason: "사람들과 어울리고 즐거운 분위기를 만드는 모습이 닮았어요. 주변의 반응을 살피며 모두가 편안하게 참여할 수 있도록 노력하는 타입이에요." },
-      { name: "다부니", id: 531, emoji: "💗", reason: "다른 사람을 세심하게 살피고 도와주는 이미지예요. 주변의 필요를 알아차리고 작은 배려를 실천하며 관계를 소중히 여기는 모습이 어울려요." },
-      { name: "픽시", id: 36, emoji: "🌙", reason: "친근하고 부드러운 분위기로 편안함을 전해요. 사람들과 조화를 이루고 함께하는 시간을 소중히 여기는 성격과 잘 어울려요." }
-    ]
-  },
+    .mbti-button.selected {
+      background: #ffda72;
+      border-color: #e8b83e;
+    }
 
-  ENFJ: {
-    match: "INFP",
-    matchReason: "ENFJ의 격려는 INFP가 자신의 생각을 표현하도록 도와줄 수 있어요. INFP의 진솔한 시각은 ENFJ가 다른 사람의 내면을 더 깊이 이해하는 데 도움이 될 수 있어요.",
-    pokemon: [
-      { name: "가디", id: 58, emoji: "🐶", reason: "용감하고 마음이 따뜻하며 소중한 이들을 지키려는 모습이 닮았어요. 다른 사람을 응원하고 함께 성장할 수 있는 방향을 찾는 타입이에요." },
-      { name: "비조도", id: 620, emoji: "🥋", reason: "민첩하면서도 주변과 호흡을 맞추는 모습이 잘 어울려요. 공동의 목표를 향해 움직이고 필요할 때 적극적으로 도움을 주는 타입이에요." },
-      { name: "밀로틱", id: 350, emoji: "🌊", reason: "차분하고 조화로운 분위기가 닮았어요. 갈등을 줄이고 서로의 감정을 이해하며 더 나은 관계를 만들어 가려는 모습이 어울려요." }
-    ]
-  },
+    button:focus-visible {
+      outline: 3px solid #b88632;
+      outline-offset: 3px;
+    }
 
-  ENTJ: {
-    match: "INTP",
-    matchReason: "ENTJ의 추진력과 INTP의 분석 능력이 만나면 아이디어를 구체적인 계획으로 발전시킬 수 있어요. 서로의 의견을 충분히 검토하며 협력하면 더 좋은 결과를 기대할 수 있어요.",
-    pokemon: [
-      { name: "갸라도스", id: 130, emoji: "🌊", reason: "강한 추진력과 존재감이 ENTJ와 잘 어울려요. 큰 목표를 향해 결단력 있게 움직이고 어려운 상황에서도 해결책을 찾으려는 타입이에요." },
-      { name: "마기라스", id: 248, emoji: "⛰️", reason: "강인하고 자신감 있는 이미지가 닮았어요. 큰 과제 앞에서도 물러서지 않고 자원을 활용해 목표를 이루려는 모습이 어울려요." },
-      { name: "엘레이드", id: 475, emoji: "⚔️", reason: "결단력과 전략적인 행동을 떠올리게 해요. 상황을 빠르게 파악하고 필요한 순간에 분명한 판단을 내리는 타입이에요." }
-    ]
-  }
-};
+    #result {
+      display: none;
+      margin-top: 28px;
+    }
+
+    .result-card {
+      background: #fffdf7;
+    }
+
+    .result-label {
+      display: inline-block;
+      background: #ffedb8;
+      color: #76551e;
+      border-radius: 30px;
+      padding: 9px 17px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .section-title {
+      margin: 28px 0 8px;
+      font-size: 25px;
+    }
+
+    .section-description {
+      color: #8b7963;
+      line-height: 1.7;
+      margin: 0 0 20px;
+    }
+
+    .pokemon-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+      margin: 20px 0 28px;
+    }
+
+    .pokemon-card {
+      background: #fff8e8;
+      border: 2px solid #f3e2b9;
+      border-radius: 20px;
+      padding: 16px 10px;
+      min-width: 0;
+    }
+
+    .pokemon-card:first-child {
+      background: #fff0bf;
+      border-color: #eac85e;
+    }
+
+    .pokemon-tag {
+      display: inline-block;
+      background: #fff;
+      border-radius: 30px;
+      padding: 6px 11px;
+      font-size: 13px;
+      color: #8a682e;
+      font-weight: bold;
+    }
+
+    .pokemon-name {
+      font-size: clamp(18px, 2.7vw, 25px);
+      margin: 13px 0 5px;
+      color: #5b4426;
+      word-break: keep-all;
+    }
+
+    .pokemon-art {
+      display: block;
+      width: min(100%, 180px);
+      aspect-ratio: 1;
+      object-fit: contain;
+      margin: 0 auto;
+      filter: drop-shadow(0 5px 4px #d9cba8);
+    }
+
+    .emoji-fallback {
+      display: none;
+      height: 150px;
+      align-content: center;
+      font-size: 80px;
+    }
+
+    .pokemon-reason {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #766348;
+      margin: 8px 0 3px;
+      word-break: keep-all;
+    }
+
+    .compatibility {
+      background: #fff1c9;
+      border: 2px solid #f0dca2;
+      border-radius: 23px;
+      padding: 23px;
+      margin-top: 28px;
+    }
+
+    .compatibility-type {
+      font-size: 27px;
+      font-weight: bold;
+      color: #634619;
+      margin: 10px 0 3px;
+    }
+
+    .compatibility-reason {
+      color: #796344;
+      line-height: 1.8;
+      font-size: 16px;
+      margin: 8px auto 20px;
+      max-width: 580px;
+      word-break: keep-all;
+    }
+
+    .compat-pokemon {
+      max-width: 280px;
+      margin: auto;
+      background: #fffaf0;
+      border: 2px solid #f3dfab;
+      border-radius: 20px;
+      padding: 12px 18px;
+    }
+
+    .compat-pokemon .pokemon-art {
+      width: 160px;
+    }
+
+    .action-button {
+      margin-top: 26px;
+      border: 0;
+      border-radius: 15px;
+      background: #eab94d;
+      color: #49330f;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 16px 30px;
+      cursor: pointer;
+    }
+
+    .action-button:hover {
+      background: #f4ca69;
+    }
+
+    .note {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #a18c70;
+      margin-top: 25px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding-top: 25px;
+      }
+
+      .panel,
+      .result-card {
+        padding: 20px 12px;
+      }
+
+      .mbti-grid {
+        gap: 7px;
+      }
+
+      .mbti-button {
+        font-size: 15px;
+        padding: 14px 1px;
+      }
+
+      .pokemon-grid {
+        gap: 7px;
+      }
+
+      .pokemon-card {
+        padding: 12px 5px;
+        border-radius: 15px;
+      }
+
+      .pokemon-tag {
+        font-size: 11px;
+        padding: 5px 7px;
+      }
+
+      .pokemon-reason {
+        font-size: 13px;
+        line-height: 1.65;
+      }
+
+      .pokemon-art {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <div class="top-icon">⚡</div>
+
+    <h1>MBTI로 포켓몬 찾기</h1>
+
+    <p class="subtitle">
+      나와 닮은 포켓몬은 누구일까?<br>
+      MBTI를 선택하고 나만의 포켓몬 친구들을 만나 봐!
+    </p>
+
+    <section class="panel" id="selection">
+      <h2>✨ 나의 MBTI는?</h2>
+      <p class="help">16가지 유형 중 하나를 선택해 줘!</p>
+      <div class="mbti-grid" id="mbtiGrid"></div>
+    </section>
+
+    <section id="result" aria-live="polite">
+      <div class="result-card">
+        <span class="result-label" id="resultType"></span>
+
+        <h2 class="section-title">💛 나와 닮은 포켓몬</h2>
+
+        <p class="section-description">
+          나의 성격과 어울리는 포켓몬 3마리를 찾아봤어!
+        </p>
+
+        <div class="pokemon-grid" id="pokemonGrid"></div>
+
+        <div class="compatibility">
+          <h2>🤝 나와 잘 맞는 MBTI</h2>
+
+          <div class="compatibility-type" id="compatType"></div>
+
+          <p class="compatibility-reason" id="compatReason"></p>
+
+          <div class="compat-pokemon">
+            <span class="pokemon-tag">궁합 포켓몬</span>
+
+            <h3 class="pokemon-name" id="compatPokemonName"></h3>
+
+            <img
+              class="pokemon-art"
+              id="compatPokemonImage"
+              src=""
+              alt=""
+            >
+
+            <div class="emoji-fallback" id="compatFallback">✨</div>
+
+            <p class="pokemon-reason" id="compatPokemonReason"></p>
+          </div>
+        </div>
+
+        <button class="action-button" id="resetButton">
+          ↩ 다시 고르기
+        </button>
+      </div>
+    </section>
+
+    <p class="note">
+      포켓몬과 MBTI의 연결은 재미를 위한 창작 결과예요.<br>
+      실제 성격이나 인간관계의 궁합을 과학적으로 판단하는 검사는 아니에요.
+    </p>
+  </main>
+
+  <script>
+    // MBTI별 포켓몬 정보
+    const pokemonData = {
+      ISTJ: {
+        match: "ESFP",
+        matchReason: "활기차고 즉흥적인 ESFP는 계획적인 ISTJ에게 새로운 즐거움을 더해 줘요. 서로 다른 장점을 인정하면 안정감과 활력을 함께 얻을 수 있어요.",
+        pokemon: [
+          { name: "꼬부기", id: 7, emoji: "🐢", reason: "신중하게 상황을 살피고 차근차근 행동하는 모습이 ISTJ와 닮았어요. 맡은 일을 꾸준히 해내며 믿음을 주는 타입이에요." },
+          { name: "거북왕", id: 9, emoji: "🐢", reason: "든든하고 책임감 있는 모습이 돋보여요. 목표를 정하면 쉽게 흔들리지 않고 자신이 맡은 역할을 충실히 해내는 성격과 잘 어울려요." },
+          { name: "모래두지", id: 27, emoji: "🟤", reason: "주변을 꼼꼼히 살피고 자신만의 방식으로 문제를 해결하는 모습이 닮았어요. 서두르기보다 확실한 방법을 선택하는 타입이에요." }
+        ]
+      },
+
+      ISFJ: {
+        match: "ESTP",
+        matchReason: "행동력이 좋은 ESTP는 ISFJ가 새로운 경험에 도전하도록 도와줄 수 있어요. ISFJ의 세심함은 ESTP에게 든든한 안정감을 줄 수 있어요.",
+        pokemon: [
+          { name: "이브이", id: 133, emoji: "🦊", reason: "주변 환경에 잘 적응하면서도 자신만의 따뜻한 매력을 지니고 있어요. 가까운 사람들을 소중히 여기고 관계를 꾸준히 가꾸는 모습이 닮았어요." },
+          { name: "럭키", id: 113, emoji: "🥚", reason: "다른 사람을 돕고 편안하게 해 주는 모습이 잘 어울려요. 상대방의 작은 변화도 알아차리고 먼저 배려하는 다정한 타입이에요." },
+          { name: "토게틱", id: 176, emoji: "🪽", reason: "주변에 기쁨과 평화를 전하는 이미지예요. 튀기보다는 조용히 곁을 지키며 다른 사람을 챙기는 모습이 닮았어요." }
+        ]
+      },
+
+      INFJ: {
+        match: "ENFP",
+        matchReason: "ENFP의 자유로운 발상과 INFJ의 깊은 통찰은 서로에게 새로운 관점을 줄 수 있어요. 서로의 이상과 가치관을 진지하게 나누기 좋은 조합이에요.",
+        pokemon: [
+          { name: "뮤", id: 151, emoji: "✨", reason: "신비롭고 상상력이 풍부한 모습이 INFJ와 잘 어울려요. 눈앞의 일만 보기보다 그 안에 담긴 의미와 가능성을 깊이 생각하는 타입이에요." },
+          { name: "에브이", id: 196, emoji: "🔮", reason: "예리한 감각으로 주변을 관찰하는 이미지예요. 다른 사람의 말뿐 아니라 감정과 분위기까지 이해하려는 섬세함이 닮았어요." },
+          { name: "가디안", id: 282, emoji: "💎", reason: "소중한 사람을 진심으로 이해하고 지키려는 모습이 잘 어울려요. 자신이 중요하게 생각하는 가치와 사람을 위해 깊이 고민하는 타입이에요." }
+        ]
+      },
+
+      INTJ: {
+        match: "ENTP",
+        matchReason: "ENTP는 새로운 가능성을 제시하고 INTJ는 그 가능성을 체계적으로 발전시킬 수 있어요. 논리적인 토론을 통해 서로의 생각을 확장할 수 있어요.",
+        pokemon: [
+          { name: "뮤츠", id: 150, emoji: "🔮", reason: "독립적으로 생각하고 자신의 목표를 향해 나아가는 모습이 닮았어요. 복잡한 문제를 분석하고 장기적인 전략을 세우는 타입과 잘 어울려요." },
+          { name: "후딘", id: 65, emoji: "🥄", reason: "뛰어난 지능과 분석력을 떠올리게 하는 포켓몬이에요. 감에만 의존하기보다 정보를 모아 논리적으로 결론을 내리는 성격과 어울려요." },
+          { name: "메타그로스", id: 376, emoji: "🤖", reason: "여러 정보를 종합해 효율적인 해결책을 찾는 이미지예요. 복잡한 상황에서도 핵심을 파악하고 체계적으로 움직이는 모습이 닮았어요." }
+        ]
+      },
+
+      ISTP: {
+        match: "ESFJ",
+        matchReason: "ESFJ는 주변 사람들과의 관계에서 따뜻함을 더하고 ISTP는 침착한 문제 해결 능력을 발휘할 수 있어요. 서로의 독립성과 배려를 존중하는 것이 중요해요.",
+        pokemon: [
+          { name: "루카리오", id: 448, emoji: "🥋", reason: "주변의 변화를 빠르게 파악하고 필요한 순간에 정확히 행동하는 모습이 닮았어요. 말로 길게 설명하기보다 직접 해 보며 해결책을 찾는 타입이에요." },
+          { name: "핫삼", id: 212, emoji: "✂️", reason: "불필요한 행동을 줄이고 필요한 일에 집중하는 모습이 잘 어울려요. 실용적인 방법을 선호하고 위기 상황에서도 침착하게 대응하는 타입이에요." },
+          { name: "앱솔", id: 359, emoji: "🌙", reason: "독립적이고 관찰력이 뛰어난 이미지예요. 혼자 생각할 시간을 중요하게 여기며 상황을 직접 파악한 뒤 판단하는 모습이 닮았어요." }
+        ]
+      },
+
+      ISFP: {
+        match: "ESTJ",
+        matchReason: "ESTJ의 계획성과 추진력은 ISFP의 아이디어를 실현하는 데 도움이 될 수 있어요. ESTJ도 ISFP를 통해 다양한 관점과 여유를 배울 수 있어요.",
+        pokemon: [
+          { name: "피카츄", id: 25, emoji: "⚡", reason: "자신의 감정에 솔직하고 소중한 사람에게 진심을 보여 주는 모습이 닮았어요. 정해진 틀에 얽매이기보다 자신만의 방식으로 즐거움을 찾는 타입이에요." },
+          { name: "님피아", id: 700, emoji: "🎀", reason: "부드럽고 다정한 분위기가 잘 어울려요. 주변 사람의 감정을 세심하게 살피고 갈등보다는 조화로운 관계를 소중히 여기는 모습이 닮았어요." },
+          { name: "리피아", id: 470, emoji: "🍃", reason: "자연스럽고 차분한 분위기가 ISFP의 감성과 잘 어울려요. 자신이 좋아하는 것과 아름답다고 느끼는 것을 중요하게 생각하는 타입이에요." }
+        ]
+      },
+
+      INFP: {
+        match: "ENFJ",
+        matchReason: "ENFJ는 INFP의 생각과 감정을 따뜻하게 표현하도록 도와줄 수 있어요. INFP는 ENFJ가 자신의 내면과 가치관을 돌아보도록 도울 수 있어요.",
+        pokemon: [
+          { name: "치코리타", id: 152, emoji: "🍃", reason: "순수하고 다정한 모습이 INFP와 닮았어요. 다른 사람의 입장을 이해하려 노력하고 자신에게 중요한 가치와 신념을 소중히 여기는 타입이에요." },
+          { name: "세레비", id: 251, emoji: "🌱", reason: "희망과 평화를 떠올리게 하는 이미지예요. 현실적인 조건만 보기보다 더 나은 미래를 상상하고 의미 있는 일을 꿈꾸는 성격과 잘 어울려요." },
+          { name: "파비코리", id: 334, emoji: "☁️", reason: "부드럽고 감성적인 분위기가 닮았어요. 상상력이 풍부하고 자신만의 내면세계를 소중히 여기며 감정을 깊이 느끼는 타입이에요." }
+        ]
+      },
+
+      INTP: {
+        match: "ENTJ",
+        matchReason: "ENTJ는 아이디어를 실행할 방향을 제시하고 INTP는 논리적인 분석으로 계획을 발전시킬 수 있어요. 서로의 의견을 존중하면 좋은 협력 관계를 만들 수 있어요.",
+        pokemon: [
+          { name: "메타몽", id: 132, emoji: "🟣", reason: "한 가지 모습이나 방법에 갇히지 않는 유연함이 닮았어요. 익숙한 문제도 다른 관점에서 바라보고 다양한 가능성을 실험하는 타입이에요." },
+          { name: "폴리곤2", id: 233, emoji: "💻", reason: "기술과 정보에 대한 호기심을 떠올리게 해요. 어떤 원리로 작동하는지 궁금해하고 스스로 이해할 때까지 탐구하는 모습이 잘 어울려요." },
+          { name: "란쿨루스", id: 579, emoji: "🧠", reason: "독특한 사고방식과 지적인 분위기가 닮았어요. 다른 사람이 당연하게 여기는 것도 질문하고 자신만의 논리로 답을 찾아가는 타입이에요." }
+        ]
+      },
+
+      ESTP: {
+        match: "ISFJ",
+        matchReason: "ISFJ의 세심함은 ESTP가 놓치기 쉬운 부분을 살펴보는 데 도움이 될 수 있어요. ESTP의 결단력은 ISFJ가 새로운 시도를 할 때 용기를 줄 수 있어요.",
+        pokemon: [
+          { name: "리자몽", id: 6, emoji: "🔥", reason: "대담하고 도전적인 모습이 ESTP와 잘 어울려요. 오래 고민하기보다 직접 부딪치며 경험을 쌓고 예상치 못한 상황에도 빠르게 대응하는 타입이에요." },
+          { name: "망나뇽", id: 149, emoji: "🐉", reason: "강한 존재감과 행동력이 돋보여요. 어려운 일이 생겨도 주저하기보다 해결 방법을 찾고 주변을 이끄는 모습이 닮았어요." },
+          { name: "초염몽", id: 392, emoji: "🔥", reason: "민첩하고 에너지가 넘치는 모습이 어울려요. 몸으로 익히는 활동과 새로운 도전을 즐기고 상황에 맞춰 유연하게 움직이는 타입이에요." }
+        ]
+      },
+
+      ESFP: {
+        match: "ISTJ",
+        matchReason: "ISTJ의 꼼꼼함은 ESFP의 아이디어가 실제 결과로 이어지도록 도와줄 수 있어요. ESFP는 ISTJ에게 일상 속 즐거움과 새로운 경험을 더해 줄 수 있어요.",
+        pokemon: [
+          { name: "파이리", id: 4, emoji: "🔥", reason: "열정적이고 활기찬 모습이 ESFP와 닮았어요. 직접 경험하는 것을 좋아하고 주변 사람들과 즐거운 순간을 나누는 타입이에요." },
+          { name: "아차모", id: 255, emoji: "🐥", reason: "호기심이 많고 새로운 일에 관심을 보이는 모습이 잘 어울려요. 생각만 하기보다 직접 참여하면서 재미와 배움을 얻는 타입이에요." },
+          { name: "플러시", id: 311, emoji: "⚡", reason: "밝고 긍정적인 에너지로 주변을 응원하는 이미지예요. 사람들과 함께 활동하며 분위기를 즐겁게 만드는 모습이 닮았어요." }
+        ]
+      },
+
+      ENFP: {
+        match: "INFJ",
+        matchReason: "ENFP의 다양한 아이디어와 INFJ의 깊은 통찰이 만나면 새로운 가능성을 발견할 수 있어요. 서로의 꿈과 생각을 진지하게 나누기 좋은 조합이에요.",
+        pokemon: [
+          { name: "라이츄", id: 26, emoji: "⚡", reason: "활발하고 호기심이 많으며 에너지가 넘치는 모습이 닮았어요. 새로운 사람과 경험에 마음을 열고 일상에서 재미있는 가능성을 발견하는 타입이에요." },
+          { name: "토게키스", id: 468, emoji: "🪽", reason: "밝고 희망적인 분위기가 잘 어울려요. 주변 사람들에게 좋은 영향을 주고 모두가 즐거울 수 있는 방법을 찾으려는 모습이 닮았어요." },
+          { name: "쉐이미", id: 492, emoji: "🌼", reason: "작은 일에서도 기쁨과 가능성을 발견하는 이미지예요. 틀에 갇히지 않고 새로운 아이디어를 떠올리며 긍정적인 변화를 꿈꾸는 타입이에요." }
+        ]
+      },
+
+      ENTP: {
+        match: "INTJ",
+        matchReason: "ENTP는 새로운 가능성을 제안하고 INTJ는 그중 실현 가능한 방향을 구체화할 수 있어요. 서로 다른 의견을 토론하며 아이디어를 발전시키기 좋은 조합이에요.",
+        pokemon: [
+          { name: "팬텀", id: 94, emoji: "👻", reason: "장난기와 재치가 넘치고 예상 밖의 행동을 하는 모습이 닮았어요. 익숙한 규칙에도 의문을 품고 색다른 해결책을 떠올리는 타입이에요." },
+          { name: "조로아크", id: 571, emoji: "🌑", reason: "영리하고 독창적인 분위기가 잘 어울려요. 남들이 생각하지 못한 전략을 떠올리고 여러 가능성을 비교하며 새로운 길을 찾는 모습이 닮았어요." },
+          { name: "깜까미", id: 302, emoji: "💎", reason: "독특한 개성과 호기심이 돋보여요. 남들과 똑같은 방식보다 자신만의 관점으로 주변을 탐색하고 재미있는 아이디어를 발견하는 타입이에요." }
+        ]
+      },
+
+      ESTJ: {
+        match: "ISFP",
+        matchReason: "ESTJ는 계획과 실행을 돕고 ISFP는 유연한 시각과 감성을 더해 줄 수 있어요. 서로의 방식이 다르다는 점을 인정하면 균형 잡힌 관계를 만들 수 있어요.",
+        pokemon: [
+          { name: "윈디", id: 59, emoji: "🐕", reason: "든든하고 책임감 있는 모습이 ESTJ와 닮았어요. 목표를 명확히 하고 맡은 역할을 적극적으로 수행하며 주변에 신뢰를 주는 타입이에요." },
+          { name: "괴력몬", id: 68, emoji: "💪", reason: "강한 힘과 꾸준한 훈련을 떠올리게 해요. 어려운 과제가 있어도 계획을 세우고 노력해 결과를 만들어 내는 모습이 잘 어울려요." },
+          { name: "아머까오", id: 823, emoji: "🛡️", reason: "침착하고 믿음직하게 자신의 역할을 수행하는 이미지예요. 상황을 정리하고 책임 있게 행동하며 질서를 유지하려는 성격과 닮았어요." }
+        ]
+      },
+
+      ESFJ: {
+        match: "ISTP",
+        matchReason: "ESFJ의 배려와 ISTP의 침착한 문제 해결 능력은 서로 다른 상황에서 도움이 될 수 있어요. 서로의 소통 방식과 개인 시간을 존중하는 것이 중요해요.",
+        pokemon: [
+          { name: "푸린", id: 39, emoji: "🎤", reason: "사람들과 어울리고 즐거운 분위기를 만드는 모습이 닮았어요. 주변의 반응을 살피며 모두가 편안하게 참여할 수 있도록 노력하는 타입이에요." },
+          { name: "다부니", id: 531, emoji: "💗", reason: "다른 사람을 세심하게 살피고 도와주는 이미지예요. 주변의 필요를 알아차리고 작은 배려를 실천하며 관계를 소중히 여기는 모습이 어울려요." },
+          { name: "픽시", id: 36, emoji: "🌙", reason: "친근하고 부드러운 분위기로 편안함을 전해요. 사람들과 조화를 이루고 함께하는 시간을 소중히 여기는 성격과 잘 어울려요." }
+        ]
+      },
+
+      ENFJ: {
+        match: "INFP",
+        matchReason: "ENFJ의 격려는 INFP가 자신의 생각을 표현하도록 도와줄 수 있어요. INFP의 진솔한 시각은 ENFJ가 다른 사람의 내면을 더 깊이 이해하는 데 도움이 될 수 있어요.",
+        pokemon: [
+          { name: "가디", id: 58, emoji: "🐶", reason: "용감하고 마음이 따뜻하며 소중한 이들을 지키려는 모습이 닮았어요. 다른 사람을 응원하고 함께 성장할 수 있는 방향을 찾는 타입이에요." },
+          { name: "비조도", id: 620, emoji: "🥋", reason: "민첩하면서도 주변과 호흡을 맞추는 모습이 잘 어울려요. 공동의 목표를 향해 움직이고 필요할 때 적극적으로 도움을 주는 타입이에요." },
+          { name: "밀로틱", id: 350, emoji: "🌊", reason: "차분하고 조화로운 분위기가 닮았어요. 갈등을 줄이고 서로의 감정을 이해하며 더 나은 관계를 만들어 가려는 모습이 어울려요." }
+        ]
+      },
+
+      ENTJ: {
+        match: "INTP",
+        matchReason: "ENTJ의 추진력과 INTP의 분석 능력이 만나면 아이디어를 구체적인 계획으로 발전시킬 수 있어요. 서로의 의견을 충분히 검토하며 협력하면 더 좋은 결과를 기대할 수 있어요.",
+        pokemon: [
+          { name: "갸라도스", id: 130, emoji: "🌊", reason: "강한 추진력과 존재감이 ENTJ와 잘 어울려요. 큰 목표를 향해 결단력 있게 움직이고 어려운 상황에서도 해결책을 찾으려는 타입이에요." },
+          { name: "마기라스", id: 248, emoji: "⛰️", reason: "강인하고 자신감 있는 이미지가 닮았어요. 큰 과제 앞에서도 물러서지 않고 자원을 활용해 목표를 이루려는 모습이 어울려요." },
+          { name: "엘레이드", id: 475, emoji: "⚔️", reason: "결단력과 전략적인 행동을 떠올리게 해요. 상황을 빠르게 파악하고 필요한 순간에 분명한 판단을 내리는 타입이에요." }
+        ]
+      }
+    };
+
+    const mbtiTypes = [
+      "ISTJ", "ISFJ", "INFJ", "INTJ",
+      "ISTP", "ISFP", "INFP", "INTP",
+      "ESTP", "ESFP", "ENFP", "ENTP",
+      "ESTJ", "ESFJ", "ENFJ", "ENTJ"
+    ];
+
+    const grid = document.getElementById("mbtiGrid");
+    const result = document.getElementById("result");
+    const selection = document.getElementById("selection");
+
+    // 포켓몬 이미지 주소
+    function imageUrl(id) {
+      return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"
+        + id + ".png";
+    }
+
+    // MBTI 버튼 16개 만들기
+    mbtiTypes.forEach(function(type) {
+      const button = document.createElement("button");
+
+      button.className = "mbti-button";
+      button.textContent = type;
+      button.type = "button";
+      button.setAttribute("aria-pressed", "false");
+
+      button.addEventListener("click", function() {
+        showPokemon(type);
+      });
+
+      grid.appendChild(button);
+    });
+
+    // 포켓몬 카드 만들기
+    function createPokemonCard(pokemon, index) {
+      const card = document.createElement("article");
+      card.className = "pokemon-card";
+
+      const tag = document.createElement("span");
+      tag.className = "pokemon-tag";
+      tag.textContent = index === 0 ? "대표 포켓몬" : "추천 포켓몬";
+
+      const name = document.createElement("h3");
+      name.className = "pokemon-name";
+      name.textContent = pokemon.name;
+
+      const img = document.createElement("img");
+      img.className = "pokemon-art";
+      img.src = imageUrl(pokemon.id);
+      img.alt = pokemon.name + " 이미지";
+      img.loading = "lazy";
+
+      const fallback = document.createElement("div");
+      fallback.className = "emoji-fallback";
+      fallback.textContent = pokemon.emoji;
+      fallback.setAttribute("aria-label", pokemon.name);
+
+      img.onerror = function() {
+        img.style.display = "none";
+        fallback.style.display = "grid";
+      };
+
+      const reason = document.createElement("p");
+      reason.className = "pokemon-reason";
+      reason.textContent = pokemon.reason;
+
+      card.append(tag, name, img, fallback, reason);
+
+      return card;
+    }
+
+    // 선택한 MBTI의 포켓몬 결과 표시
+    function showPokemon(type) {
+      const data = pokemonData[type];
+
+      document.querySelectorAll(".mbti-button").forEach(function(button) {
+        const active = button.textContent === type;
+
+        button.classList.toggle("selected", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+
+      document.getElementById("resultType").textContent =
+        "나의 MBTI: " + type;
+
+      const pokemonGrid = document.getElementById("pokemonGrid");
+
+      // 이전 결과를 지우고 포켓몬 3마리 표시
+      pokemonGrid.replaceChildren();
+
+      data.pokemon.forEach(function(pokemon, index) {
+        pokemonGrid.appendChild(createPokemonCard(pokemon, index));
+      });
+
+      // 궁합 유형과 궁합 포켓몬 찾기
+      const matchData = pokemonData[data.match];
+
+      const mainIds = new Set(
+        data.pokemon.map(function(pokemon) {
+          return pokemon.id;
+        })
+      );
+
+      // 나의 포켓몬 3마리와 중복되지 않는 포켓몬 선택
+      const compatPokemon = matchData.pokemon.find(function(pokemon) {
+        return !mainIds.has(pokemon.id);
+      });
+
+      document.getElementById("compatType").textContent =
+        data.match;
+
+      document.getElementById("compatReason").textContent =
+        data.matchReason;
+
+      const compatName =
+        document.getElementById("compatPokemonName");
+
+      const compatImage =
+        document.getElementById("compatPokemonImage");
+
+      const compatFallback =
+        document.getElementById("compatFallback");
+
+      const compatReason =
+        document.getElementById("compatPokemonReason");
+
+      compatName.textContent = compatPokemon.name;
+      compatReason.textContent = compatPokemon.reason;
+
+      compatImage.style.display = "block";
+      compatFallback.style.display = "none";
+      compatFallback.textContent = compatPokemon.emoji;
+
+      compatImage.alt = compatPokemon.name + " 이미지";
+      compatImage.onerror = function() {
+        compatImage.style.display = "none";
+        compatFallback.style.display = "grid";
+      };
+
+      compatImage.src = imageUrl(compatPokemon.id);
+
+      result.style.display = "block";
+
+      result.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    // 처음 화면으로 돌아가기
+    document.getElementById("resetButton").addEventListener("click", function() {
+      result.style.display = "none";
+
+      document.querySelectorAll(".mbti-button").forEach(function(button) {
+        button.classList.remove("selected");
+        button.setAttribute("aria-pressed", "false");
+      });
+
+      selection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  </script>
+</body>
+</html>
